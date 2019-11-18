@@ -1,0 +1,30 @@
+{
+  "id": "1515901",
+  "name": "richtext",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "650809",
+      "name": "用户",
+      "font_class": "yonghu",
+      "unicode": "e652",
+      "unicode_decimal": 58962
+    },
+    {
+      "icon_id": "795509",
+      "name": "眼睛",
+      "font_class": "ai-eye",
+      "unicode": "e669",
+      "unicode_decimal": 58985
+    },
+    {
+      "icon_id": "5203329",
+      "name": "钟",
+      "font_class": "zhong",
+      "unicode": "e641",
+      "unicode_decimal": 58945
+    }
+  ]
+}

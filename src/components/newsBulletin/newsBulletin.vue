@@ -33,8 +33,17 @@
     height 100%
     background url(img/parkNews_bg.jpg) no-repeat;
     background-size 100% 100%
+    color: #999;
+    font-size: 13px;
     .title,.overview
       display flex
+      padding 0 15px
+    .title
+      height 33px
+      line-height 33px
+      border-bottom 1px solid #eee
+    .el-row
+      padding 0 5%
     .el-col
       height 175px
       .box
