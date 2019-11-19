@@ -20,11 +20,25 @@
       "unicode_decimal": 58985
     },
     {
+      "icon_id": "3544170",
+      "name": "修改",
+      "font_class": "ico_compile",
+      "unicode": "e657",
+      "unicode_decimal": 58967
+    },
+    {
       "icon_id": "5203329",
       "name": "钟",
       "font_class": "zhong",
       "unicode": "e641",
       "unicode_decimal": 58945
+    },
+    {
+      "icon_id": "6966926",
+      "name": "删除",
+      "font_class": "shanchu",
+      "unicode": "e62a",
+      "unicode_decimal": 58922
     }
   ]
 }
