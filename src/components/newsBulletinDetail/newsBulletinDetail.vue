@@ -3,16 +3,16 @@
     <div class="c-header">
       <div class="hd-left">新闻公告</div>
       <div class="hd-right">
-      <el-button size="small">返回列表</el-button>
+      <el-button size="small" @click="back">返回列表</el-button>
       </div>
     </div>
     <div class="c-body">
-      <div class="bd-titile">标题</div>
+      <div class="bd-titile">{{data.sTitle}}</div>
       <div class="bd-description">
-        <div><span>发布人：xuyao</span></div>
+        <div><span>发布人：{{data.sWriter}}</span></div>
         <div><span>时间：2019-09-12</span></div>
       </div>
-      <div class="bd-body">内容</div>
+      <div class="bd-body" v-html="data.txtContent"></div>
     </div>
     <div class="c-footer">
       <el-button size="small">上一篇</el-button>
@@ -22,9 +22,31 @@
 </template>
 
 <script>
+  export default{
+    data(){
+      return{
+        data:{}
+      }
+    },
+    created(){
+      let sNewsID = this.$route.query.sNewsID;
+      this.$get(this.apis.yqcynews_info+sNewsID)
+      .then((res)=>{
+        this.data = res.yqCyNews;
+      })
+      .catch((err)=>{
+
+      })
+    },
+    methods:{
+      back(){
+        this.$router.go(-1)
+      }
+    }
+  }
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped="scoped">
   .content
     width 100%
     height 100%

@@ -1,20 +1,27 @@
 <template>
     <div class="content">
       <el-row>
-        <el-col :span="12" v-for="(item,index) in formatListData" :key="index">
+        <el-button @click="addCol">添加</el-button>
+      </el-row>
+      <el-row>
+        <el-col :span="12" v-for="(item,index) in formatListData" :key="index" @click.native="getInfoDetail(item.sNewsID)">
           <div class="box">
             <div class="title">
               <div><i class="iconfont icon-zhong"></i><span>{{item.tTime}}</span></div>
               <div><i class="iconfont icon-yonghu"></i><span>{{item.sWriter}}</span></div>
               <div><i class="iconfont icon-ai-eye"></i><span>9</span></div>
-              <div style="position:absolute;right:35px"><i class="iconfont icon-ico_compile" title="修改" @click="editCol"></i></div>
-              <div style="position: absolute;right: 10px;"><i class="iconfont icon-shanchu" style="font-size: 20px;" title="删除" @click="dialogVisible = true"></i></div>
+              <div style="position:absolute;right:35px"><i class="iconfont icon-ico_compile" title="修改" @click.stop="editCol"></i></div>
+              <div style="position: absolute;right: 10px;"><i class="iconfont icon-shanchu" style="font-size: 20px;" title="删除" @click.stop="(dialogVisible=true)&&(deleteId=item.sNewsID)"></i></div>
             </div>
             <div class="overview">
-              <div class="ov-img">图片</div>
+              <div class="ov-img">
+                 <el-image
+                style="width: 100%; height: 100%"
+                :src="item.sCoverPicUrl"></el-image>
+              </div>
               <div class="ov-msg">
                 <div class="msg-title">{{item.sTitle}}</div>
-                <div class="msg-content">{{item.txtContent}}</div>
+                <div class="msg-content">{{item.sCoverRemark}}</div>
               </div>
             </div>
           </div>
@@ -32,11 +39,11 @@
         title="提示"
         :visible.sync="dialogVisible"
         width="30%"
-        :before-close="handleClose">
+        >
         <span>确认删除？</span>
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
-          <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
+          <el-button type="primary" @click="deleteCol">确 定</el-button>
         </span>
       </el-dialog>
     </div>
@@ -47,6 +54,7 @@
   export default {
     data(){
       return{
+        deleteId:'',
         dialogVisible:false,
         listData:[],
         page:{
@@ -74,7 +82,7 @@
         	"sWriter":""
       };
       /* 请求分页列表数据*/
-      this.$post('/api/news/yqcynews/list',data)
+      this.$post(this.apis.yqcynews_list,data)
       .then((res)=>{
         console.log('res',res);
         this.listData = res.page.list;
@@ -82,6 +90,7 @@
         this.page.pageSize = res.page.pageSize;
       })
       .catch((err)=>{
+        this.listData = [{tTime:'1498627266000',sWriter:'lk',sTitle:'hello',txtContent:'hellohellohellohello'}]
         console.log('err',err);
       })
 
@@ -99,11 +108,18 @@
           return ''
         }
       },
+      /* 新增一条数据*/
+      addCol(){
+        this.$router.push({path:'/publication_add', query: {data:'123'}})
+      },
+       /* 编辑当前数据*/
       editCol(){
-        
+
       },
       /* 调用接口删除当前数据*/
-      deleteCol(id){
+      deleteCol(){
+        this.dialogVisible = false;
+        console.log('this.deleteId',this.deleteId);
         /* this.$post('/api/news/yqcynews/delete/0001',id)
         .then((res)=>{
 
@@ -111,12 +127,16 @@
         .catch((err)=>{
 
         }) */
+      },
+      /* 查看新闻详情*/
+      getInfoDetail(id){
+        this.$router.push({path:'/newsBulletinDetail', query: {sNewsID:id}})
       }
     }
   }
 </script>
 
-<style lang="stylus">
+<style lang="stylus" scoped="scoped">
   .content
     width 100%
     height 100%
