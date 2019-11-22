@@ -11,11 +11,18 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-    	'/api': { //替换代理地址名称
+    	/* '/api': { //替换代理地址名称
           target: 'http://192.168.0.201:9093/', //代理地址
           changeOrigin: true, //可否跨域
           pathRewrite: {
             '^/api': '' //重写接口，去掉/api
+          }
+      }, */
+      '/apis': { //替换代理地址名称
+          target: 'http://192.168.0.201:8091/', //代理地址
+          changeOrigin: true, //可否跨域
+          pathRewrite: {
+            '^/apis': '' //重写接口，去掉/api
           }
       }
     },
