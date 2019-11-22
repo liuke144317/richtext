@@ -9,11 +9,16 @@
     <div class="c-body">
       <el-form label-width="80px" size="small" v-model="form">
         <el-row>
-          <el-col :span="12">
+          <el-col :span="24">
             <el-form-item label="标题">
                 <el-input v-model="form.sTitle"></el-input>
             </el-form-item>
           </el-col>
+          <!-- <el-col :span="12">
+            <el-form-item label="标题">
+                <el-input v-model="form.sTitle"></el-input>
+            </el-form-item>
+          </el-col> -->
           <!-- <el-col :span="12">
             <el-form-item label="类别" v-model="form.sCategoryID">
                 <el-input></el-input>
@@ -42,11 +47,14 @@
           <el-col :span="24" style="display: flex;margin-bottom: 18px;">
             <span>封面摘要</span>
             <el-upload
-              action="https://jsonplaceholder.typicode.com/posts/"
+              action
               :show-file-list="false"
               :on-success="handleAvatarSuccess"
+              :http-request="uploadImg"
               :before-upload="beforeAvatarUpload">
-              <img src="./img/upload.png" class="avatar" height="125px" width="166px">
+              <img v-if="imageUrl" :src="imageUrl" class="avatar" height="125px" width="166px">
+              <!-- <i v-else class="el-icon-plus avatar-uploader-icon"></i> -->
+              <img v-else src="./img/upload.png" class="avatar" height="125px" width="166px">
             </el-upload>
             <!-- <img src="./img/upload.png" alt="选择上传图片" height="125px"> -->
             <el-form-item prop="" class="mstyle">
@@ -74,6 +82,7 @@
 
 <script>
   import E from 'wangeditor'
+  import axios from 'axios'
   export default {
     name: 'editor',
     components: {
@@ -81,6 +90,7 @@
     data() {
       return {
         editorContent: '',
+        imageUrl:'',
         form:{
           sTitle:'',
           sCategoryID:'',
@@ -91,6 +101,40 @@
       };
     },
     methods:{
+      /* 重写elementui文件上传方法*/
+     uploadImg(fileObj) {
+       console.log('URL.createObjectURL(file.raw);',URL.createObjectURL(fileObj.file));
+       let formData = new FormData();
+       /*读取文件base64*/
+       let reader = new FileReader();
+       let _this = this;
+       reader.onload = function(event) {
+         _this.imageUrl = event.target.result;
+         // console.log('content',content);
+         formData.set("file", fileObj.file);
+         formData.set("token", 'e6fde487482ac455b8605d8e6998f02f');
+         formData.set("url", '');
+         _this.$post('/apis/sys/oss/uploadFile', formData, {
+           headers: {
+             "Content-type": "multipart/form-data"
+           }
+         }).then((res)=>{
+           if(res.code=='0'||res.msg=='success'){
+             _this.form.sCoverPicUrl =res.url
+           }
+
+         }).catch((err)=>{
+
+         });
+
+       }
+       reader.onerror = function(event) {
+        console.log('解析失败');
+       }
+       if(fileObj.file){
+         reader.readAsDataURL(fileObj.file,"UTF-8");
+       }
+       },
       /* 获取富文本框内容*/
       getContent() {
         this.form.txtContent = this.editorContent
@@ -101,12 +145,10 @@
       },
       handleAvatarSuccess(res, file) {
         console.log('res',res);
-        console.log('file',file);
         this.form.sCoverPicUrl = URL.createObjectURL(file.raw);
-        console.log('this.form.sCoverPicUrl',this.form.sCoverPicUrl);
       },
       beforeAvatarUpload(file) {
-        const isJPG = file.type === 'image/jpeg'||'image/png'||'image/jpg';
+        const isJPG = file.type === 'image/jpeg'||file.type === 'image/png';
         const isLt2M = file.size / 1024 / 1024 < 2;
 
         if (!isJPG) {
