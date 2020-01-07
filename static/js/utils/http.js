@@ -3,11 +3,11 @@ import qs from 'qs'
 let baseURL = ''
 axios.defaults.withCredentials=true;
 axios.defaults.timeout =  6000;//请求超时时间
-/* if(process.env.NODE_ENV == 'development'){
-  axios.defaults.baseURL = baseURL
+if(process.env.NODE_ENV == 'development'){
+  axios.defaults.baseURL = '/api'
 }else{
-  axios.defaults.baseURL = baseURL
-} */
+  axios.defaults.baseURL = 'http://192.168.0.201:9093'
+}
 //http request 拦截器
 axios.interceptors.request.use(
   config => {

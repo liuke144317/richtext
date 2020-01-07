@@ -4,6 +4,7 @@ import HelloWorld from '@/components/HelloWorld'
 import newsBulletin from '@/components/newsBulletin/newsBulletin'
 import newsBulletinDetail from '@/components/newsBulletinDetail/newsBulletinDetail'
 import publication_add from '@/components/newsBulletinPublication/publication_add/publication_add'
+import publication_modifier from '@/components/newsBulletinPublication/publication_modifier/publication_modifier'
 
 Vue.use(Router)
 
@@ -32,6 +33,12 @@ export default new Router({
       path: '/publication_add',
       name: 'publication_add',
       component: publication_add
+    },
+    {
+      /* 新闻公告发布-修改新闻*/
+      path: '/publication_modifier',
+      name: 'publication_modifier',
+      component: publication_modifier
     }
   ]
 })
