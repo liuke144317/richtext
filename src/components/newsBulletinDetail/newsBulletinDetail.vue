@@ -74,8 +74,8 @@
     .hd-right
       float right
     & .el-button
-      color: rgb(233,95,104);
-      border: 1px solid rgb(233,95,104);
+      color: rgb(45,137,247);
+      border: 1px solid rgb(45,137,247);
     .c-body
       margin 50px 0
       border-bottom 1px rgb(240,240,240) dashed
@@ -94,6 +94,6 @@
         margin-bottom 20px
     .c-footer .el-button
        color #FFF
-       background rgb(208,84,84)
+       background rgb(45,137,247)
        // background rgb(255,144,144)
 </style>

@@ -113,7 +113,7 @@
       },
       /* 新增一条数据*/
       addCol(){
-        this.$router.push({path:'/publication_add', query: {data:'123'}})
+        this.$router.push({path:'/publication_add'})
       },
        /* 编辑当前数据*/
       editCol(item){
@@ -121,13 +121,13 @@
       },
       /* 调用接口删除当前数据*/
       deleteCol(){
-        let option1 = {
+        const option1 = {
           type:'success',
           message:'移除成功！',
           showClose:true,
           duration:0
         }
-        let option2 = {
+        const option2 = {
           type:'error',
           message:'移除失败！',
           showClose:true,

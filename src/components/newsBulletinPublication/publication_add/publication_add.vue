@@ -3,14 +3,14 @@
     <div class="c-header">
       <div class="hd-left">新闻公告添加</div>
       <div class="hd-right">
-      <el-button size="small" @click="back">我的发布</el-button>
+      <el-button size="small" @click="back">返回发布列表</el-button>
       </div>
     </div>
     <div class="c-body">
       <el-form label-width="80px" size="small" :model="form" :rules="rules" ref="form">
         <el-row>
           <el-col :span="24">
-            <el-form-item label="标题" prop="title">
+            <el-form-item label="标题" prop="sTitle">
                 <el-input v-model="form.sTitle"></el-input>
             </el-form-item>
           </el-col>
@@ -81,7 +81,7 @@
     </div>
     <div class="c-footer">
       <el-button size="small" @click="save('form')">保存</el-button>
-      <el-button size="small">取消</el-button>
+      <el-button size="small" @click="cancel">取消</el-button>
     </div>
     <el-upload
        id="upload-quill"
@@ -89,6 +89,16 @@
       :http-request="uploadImg">
       <el-button size="small" type="primary"></el-button>
     </el-upload>
+    <el-dialog
+      title="提示"
+      :visible.sync="dialogVisible"
+      width="30%">
+      <span>确认退出当前操作？</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="dialogHandle">取 消</el-button>
+        <el-button type="primary" @click="dialogHandle('confirm')">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -107,9 +117,11 @@
     components: { quillEditor },
     data() {
       return {
+        //confirm
+        dialogVisible:false,
         //校验规则
         rules:{
-          title:[
+          sTitle:[
             { required: true, message: '请输入标题', trigger: 'blur' }
             ]
         },
@@ -174,13 +186,22 @@
     methods:{
       /* 重写elementui文件上传方法*/
       uploadImg(fileObj) {
+        const loading = Loading.service({ fullscreen: true });
+        const option = {
+          type:'error',
+          message:'插入失败！',
+          showClose:true,
+          duration:0
+        }
        console.log('URL.createObjectURL(file.raw);',URL.createObjectURL(fileObj.file));
        let formData = new FormData();
        /*读取文件base64*/
        let reader = new FileReader();
        let _this = this;
        reader.onload = function(event) {
-         _this.imageUrl = event.target.result;
+         if(fileObj.action === '1'){
+           _this.imageUrl = event.target.result;
+         }
          formData.set("file", fileObj.file);
          formData.set("token", 'e6fde487482ac455b8605d8e6998f02f');
          formData.set("url", '');
@@ -206,7 +227,10 @@
                 _this.form.sCoverPicUrl =res.url
               }
             }
+           loading.close()
          }).catch((err)=>{
+           Message(option)
+           loading.close()
            //todo 测试加了下面的代码，请求能连通时去掉
             console.log('文件上传失败');
            let fileType = fileObj.file.type,domType = 'image'
@@ -225,7 +249,7 @@
         console.log('解析失败');
        }
        if(fileObj.file){
-         reader.readAsDataURL(fileObj.file,"UTF-8");
+        reader.readAsDataURL(fileObj.file,"UTF-8");
        }
       },
       //内容改变事件-获取富文本框内容
@@ -236,9 +260,11 @@
       back(){
         this.$router.go(-1)
       },
+      /*文件上传成功时调用*/
       handleAvatarSuccess(res, file) {
         this.form.sCoverPicUrl = URL.createObjectURL(file.raw);
       },
+      /*文件上传前时调用*/
       beforeAvatarUpload(file) {
         const isJPG = file.type === 'image/jpeg'||file.type === 'image/png';
         const isLt2M = file.size / 1024 / 1024 < 2;
@@ -269,7 +295,7 @@
               showClose:true,
               duration:0
             }
-            this.form.txtContent = this.editorContent
+            // this.form.txtContent = this.editorContent
             this.$post(this.apis.yqcynews_save,this.form)
               .then((res)=>{
                 loading.close()
@@ -280,12 +306,27 @@
             })
           } else {
             console.log('error submit!!');
+            return false;
           }
         })
 
+      },
+      cancel(){
+        this.dialogVisible = true;
+      },
+      dialogHandle(type){
+        this.dialogVisible = false
+        if(type === 'confirm'){
+          this.$router.go(-1)
+        }
       }
     },
+    created(){
+      const time = this.$common_function.getCurrentTime();
+      console.log('time',time)
+    },
     mounted() {
+
       this.editor = this.$refs.myQuillEditor.quill;
       this.editor.container.style.height = `${400}px`
     },
@@ -300,21 +341,21 @@
   .content>>>#upload-quill
     display none
   .content
-    min-width: 820px;
+    min-width: 820px
     width 100%
     height 100%
     background-size 100% 100%
-    color: #999;
+    color: #999
     font-size 13px
-    overflow auto;
+    overflow auto
     padding 0 30px
     box-sizing border-box
     .c-header
       margin-top 30px
-      height: 32px;
-      line-height: 32px;
-      padding: 10px 0;
-      border-bottom: 1px rgb(240,240,240) solid;
+      height 32px
+      line-height 32px
+      padding 10px 0
+      border-bottom 1px rgb(240,240,240) solid
     .c-header:after
       content ''
       display inline-block
@@ -326,9 +367,9 @@
       color rgb(47,53,59)
     .hd-right
       float right
-    & .el-button
-      color: rgb(233,95,104);
-      border: 1px solid rgb(233,95,104);
+      & .el-button
+        color rgb(45,137,247)
+        border 1px solid rgb(45,137,247)
     .c-body
       margin 50px 0
       border-bottom 1px rgb(240,240,240) dashed
@@ -364,6 +405,6 @@
         margin-left 10px!important
     .c-footer .el-button:first-child
        color #FFF
-       background rgb(208,84,84)
+       background rgb(45,137,247)
        // background rgb(255,144,144)
 </style>

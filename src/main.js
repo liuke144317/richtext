@@ -8,26 +8,27 @@ import 'element-ui/lib/theme-chalk/index.css';
 import '@/assets/css/iconfont/iconfont.css';
 import {post,get} from '../static/js/utils/http'
 import apis from '../static/js/apis.js';
-
+import common_function from '../static/js/utils/common.js';
 Vue.config.productionTip = false
 /* axios请求封装 */
 Vue.prototype.$get = get
 Vue.prototype.$post = post
 /* 统一接口管理 */
 Vue.prototype.apis = apis;
+Vue.prototype.$common_function = common_function;
 
 Vue.use(Row)
 Vue.use(Col)
-Vue.use(Pagination);
-Vue.use(Button);
-Vue.use(Dialog);
-Vue.use(Input);
-Vue.use(Form);
-Vue.use(FormItem);
-Vue.use(Radio);
-Vue.use(RadioGroup);
-Vue.use(Image);
-Vue.use(Upload);
+Vue.use(Pagination)
+Vue.use(Button)
+Vue.use(Dialog)
+Vue.use(Input)
+Vue.use(Form)
+Vue.use(FormItem)
+Vue.use(Radio)
+Vue.use(RadioGroup)
+Vue.use(Image)
+Vue.use(Upload)
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
